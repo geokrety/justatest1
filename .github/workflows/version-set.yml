@@ -34,8 +34,8 @@ jobs:
           valueFile: 'main.yml'
           changes: |
             {
-              "${{ steps.vars.outputs.version_set_name }}.docker_tag": "$GITHUB_REF_NAME",
-              "${{ steps.vars.outputs.version_set_name }}.git_url": "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
+              "${{ steps.vars.outputs.version_set_name }}.docker_tag": "${{ echo $GITHUB_REF_NAME }}",
+              "${{ steps.vars.outputs.version_set_name }}.git_url": "${{ echo $GITHUB_SERVER_URL/$GITHUB_REPOSITORY }}"
             }
 
           repository: geokrety/justatest2
@@ -49,4 +49,5 @@ jobs:
           branch: deployment/$GITHUB_REPOSITORY/$GITHUB_REF_NAME
           commitUserName: geokrety-bot
           commitUserEmail: geokrety-bot@users.noreply.github.com
-          message: 'Update $GITHUB_REPOSITORY version to $GITHUB_REF_NAME'
+          message: |
+            feat: Update $GITHUB_REPOSITORY version to $GITHUB_REF_NAME
