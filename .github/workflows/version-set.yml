@@ -10,7 +10,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout current code
         uses: actions/checkout@v3
         with:
           path: 'source'
@@ -21,6 +21,12 @@ jobs:
           echo GITHUB_REF_NAME: $GITHUB_REF_NAME
           [ -f source/.versionset ] || { echo ".versionset file missing"; exit 1; }
           echo "version_set_name=$(cat source/.versionset)" >> $GITHUB_OUTPUT
+
+      - name: Checkout version-set repo
+        uses: actions/checkout@v3
+        with:
+          path: 'versionset'
+          repository: geokrety/justatest2
 
       - name: Update Version-Set
         uses: fjogeleit/yaml-update-action@main
