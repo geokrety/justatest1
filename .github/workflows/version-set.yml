@@ -25,7 +25,7 @@ jobs:
       - name: Update Version-Set
         uses: fjogeleit/yaml-update-action@main
         with:
-          # valueFile: 'main.yaml'
+          valueFile: 'main.yaml'
           # propertyPath: '${{ steps.vars.outputs.version_set_name }}.docker_tag'
           # value: $GITHUB_REF_NAME
           changes: |
