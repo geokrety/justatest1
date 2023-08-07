@@ -43,8 +43,8 @@ jobs:
 
       - name: Create Pull Request
         id: cpr
-        with:
         uses: peter-evans/create-pull-request@v5
+        with:
           path: versionset
           token: ${{ secrets.GH_TOKEN }}
           add-paths: defaults/versionset.yml
