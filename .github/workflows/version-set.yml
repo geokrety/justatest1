@@ -48,6 +48,4 @@ jobs:
           branch: deployment/$GITHUB_REPOSITORY/$GITHUB_REF_NAME
           commitUserName: geokrety-bot
           commitUserEmail: geokrety-bot@users.noreply.github.com
-          GIT_COMMITTER_NAME: geokrety-bot
-          GIT_COMMITTER_EMAIL: geokrety-bot@users.noreply.github.com
           message: 'Update $GITHUB_REPOSITORY version to $GITHUB_REF_NAME'
