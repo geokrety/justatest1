@@ -19,9 +19,6 @@ jobs:
         id: vars
         run: |
           echo "version=$GITHUB_REF_NAME" | tee $GITHUB_OUTPUT
-          echo "server_url=$GITHUB_SERVER_URL" | tee $GITHUB_OUTPUT
-          echo "repository=$GITHUB_REPOSITORY" | tee $GITHUB_OUTPUT
-          
           [ -f source/.versionset ] || { echo ".versionset file missing"; exit 1; }
           echo "version_set_name=$(cat source/.versionset)" | tee $GITHUB_OUTPUT
 
@@ -37,8 +34,8 @@ jobs:
           valueFile: 'main.yml'
           changes: |
             {
-              "${{ steps.vars.outputs.version_set_name }}.docker_tag": "${{ steps.vars.outputs.version }}",
-              "${{ steps.vars.outputs.version_set_name }}.git_url": "${{ steps.vars.outputs.server_url }}/${{ steps.vars.outputs.repository }}"
+              "${{ steps.vars.outputs.version_set_name }}.docker_tag": "${{ env.GITHUB_REF_NAME }}",
+              "${{ steps.vars.outputs.version_set_name }}.git_url": "${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}"
             }
 
           repository: geokrety/justatest2
@@ -49,8 +46,8 @@ jobs:
 
           createPR: true
           masterBranchName: main
-          branch: deployment/${{ steps.vars.outputs.repository }}/${{ steps.vars.outputs.version }}
+          branch: deployment/${{ env.GITHUB_REPOSITORY }}/${{ env.GITHUB_REF_NAME }}
           commitUserName: geokrety-bot
           commitUserEmail: geokrety-bot@users.noreply.github.com
           message: |
-            feat: Update ${{ steps.vars.outputs.repository }} version to ${{ steps.vars.outputs.version }}
+            feat: Update ${{ env.GITHUB_REPOSITORY }} version to ${{ env.GITHUB_REF_NAME }}
