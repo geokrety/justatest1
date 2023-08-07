@@ -45,6 +45,7 @@ jobs:
           workDir: versionset
 
           createPR: true
+          masterBranchName: main
           branch: deployment/$GITHUB_REPOSITORY/$GITHUB_REF_NAME
           commitUserName: geokrety-bot
           commitUserEmail: geokrety-bot@users.noreply.github.com
