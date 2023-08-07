@@ -21,7 +21,6 @@ jobs:
           echo "version=$GITHUB_REF_NAME" | tee $GITHUB_OUTPUT
           [ -f source/.versionset ] || { echo ".versionset file missing"; exit 1; }
           echo "version_set_name=$(cat source/.versionset)" | tee $GITHUB_OUTPUT
-          env | sort
 
       - name: Checkout version-set repo
         uses: actions/checkout@v3
