@@ -20,7 +20,7 @@ jobs:
         run: |
           echo GITHUB_REF_NAME: $GITHUB_REF_NAME
           [ -f source/.versionset ] || { echo ".versionset file missing"; exit 1; }
-          echo "version_set_name=$(cat source/.versionset)" >> $GITHUB_OUTPUT
+          echo "version_set_name=$(cat source/.versionset)" | tee $GITHUB_OUTPUT
 
       - name: Checkout version-set repo
         uses: actions/checkout@v3
@@ -31,9 +31,7 @@ jobs:
       - name: Update Version-Set
         uses: fjogeleit/yaml-update-action@main
         with:
-          valueFile: 'main.yaml'
-          # propertyPath: '${{ steps.vars.outputs.version_set_name }}.docker_tag'
-          # value: $GITHUB_REF_NAME
+          valueFile: 'main.yml'
           changes: |
             {
               "${{ steps.vars.outputs.version_set_name }}.docker_tag": "$GITHUB_REF_NAME",
@@ -41,9 +39,15 @@ jobs:
             }
 
           repository: geokrety/justatest2
-          branch: deployment/$GITHUB_REPOSITORY/$GITHUB_REF_NAME
           targetBranch: main
-          createPR: true
-          message: 'Update $GITHUB_REPOSITORY version to $GITHUB_REF_NAME'
-          token: ${{ secrets.GITHUB_TOKEN }}
+
+          token: ${{ secrets.GH_TOKEN }}
           workDir: versionset
+
+          createPR: true
+          branch: deployment/$GITHUB_REPOSITORY/$GITHUB_REF_NAME
+          commitUserName: geokrety-bot
+          commitUserEmail: geokrety-bot@users.noreply.github.com
+          GIT_COMMITTER_NAME: geokrety-bot
+          GIT_COMMITTER_EMAIL: geokrety-bot@users.noreply.github.com
+          message: 'Update $GITHUB_REPOSITORY version to $GITHUB_REF_NAME'
