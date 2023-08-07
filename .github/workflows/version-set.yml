@@ -32,6 +32,7 @@ jobs:
         uses: fjogeleit/yaml-update-action@main
         with:
           commitChange: false
+          createPR: false
           repository: geokrety/geokrety-ansible
           valueFile: defaults/versionset.yml
           changes: |
