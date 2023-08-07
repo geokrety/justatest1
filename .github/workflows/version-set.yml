@@ -1,0 +1,43 @@
+name: Update version-set
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  versionset:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: 'geokrety/justatest'
+          path: 'source'
+
+      - name: Get values
+        id: vars
+        run: |
+          echo GITHUB_REF_NAME: $GITHUB_REF_NAME
+          echo "version_set_name=$(cat source/.versionset)" >> $GITHUB_OUTPUT
+
+      - name: Update Version-Set
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          # valueFile: 'main.yaml'
+          # propertyPath: '${{ steps.vars.outputs.version_set_name }}.docker_tag'
+          # value: $GITHUB_REF_NAME
+          changes: |
+            {
+              "${{ steps.vars.outputs.version_set_name }}.docker_tag": "$GITHUB_REF_NAME",
+              "${{ steps.vars.outputs.version_set_name }}.git_url": "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
+            }
+
+          repository: geokrety/justatest2
+          branch: deployment/$GITHUB_REPOSITORY/$GITHUB_REF_NAME
+          targetBranch: main
+          createPR: true
+          message: 'Update $GITHUB_REPOSITORY version to $GITHUB_REF_NAME'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          workDir: versionset
