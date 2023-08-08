@@ -8,5 +8,5 @@ on:
 jobs:
   versionset:
     uses: geokrety/geokrety-gha-workflows/.github/workflows/version-set.yml@main
-    with:
+    secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
