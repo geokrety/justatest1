@@ -10,59 +10,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout current code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+      - uses: geokrety/geokrety-gha-workflows/.github/workflows/version-set.yml@v1
         with:
-          path: 'source'
-
-      - name: Get values
-        id: vars
-        run: |
-          echo "version=${GITHUB_REF_NAME#v}" | tee -a $GITHUB_OUTPUT
-          [ -f source/.versionset ] || { echo ".versionset file missing"; exit 1; }
-          echo "version_set_name=$(cat source/.versionset)" | tee -a $GITHUB_OUTPUT
-
-      - name: Checkout ansible repo
-        uses: actions/checkout@v3
-        with:
-          path: 'versionset'
-          repository: geokrety/geokrety-ansible
-
-      - name: Update Version-Set
-        uses: fjogeleit/yaml-update-action@main
-        with:
-          commitChange: false
-          createPR: false
-          repository: geokrety/geokrety-ansible
-          valueFile: defaults/versionset.yml
-          changes: |
-            {
-              "${{ steps.vars.outputs.version_set_name }}.docker_tag": "${{ steps.vars.outputs.version }}",
-              "${{ steps.vars.outputs.version_set_name }}.git_url": "${{ github.server_url }}/${{ github.repository }}"
-            }
-          workDir: versionset
-
-      - name: Create Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v5
-        with:
-          path: versionset
-          token: ${{ secrets.GH_TOKEN }}
-          add-paths: defaults/versionset.yml
-          commit-message: |
-            feat: Bump ${{ github.repository }} in version-set to ${{ github.ref_name }}
-          committer: geokrety-bot <geokrety-bot@users.noreply.github.com>
-          author: geokrety-bot <geokrety-bot@users.noreply.github.com>
-          branch: deployment/${{ github.repository }}
-          delete-branch: true
-          title: |
-            Bump ${{ github.repository }} in version-set
-          labels: version-set
-          assignees: kumy
-          reviewers: kumy
-
-      - name: Check outputs
-        if: ${{ steps.cpr.outputs.pull-request-number }}
-        run: |
-          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
-          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
