@@ -1,4 +1,4 @@
-name: pre-commit
+name: lint
 
 on:
   pull_request:
@@ -7,5 +7,5 @@ on:
       - '!main'
 
 jobs:
-  call-pre-commit:
+  lint:
     uses: geokrety/geokrety-gha-workflows/.github/workflows/pre-commit.yml@main
